@@ -17,7 +17,6 @@ const getOne = async (id) => {
   return result[0];
 };
 
-
 module.exports = {
   getAll,
   getOne,

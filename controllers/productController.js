@@ -20,4 +20,4 @@ const getOne = async (req, res) => {
 module.exports = {
   getAll,
   getOne,
-}
+};
