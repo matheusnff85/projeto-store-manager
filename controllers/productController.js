@@ -24,8 +24,7 @@ const createProduct = async (req, res) => {
     return res.status(result.code).json({ message: result.message });
   }
   return res.status(result.code).send(result.data);
-}
-
+};
 
 module.exports = {
   getAll,
