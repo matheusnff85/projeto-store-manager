@@ -7,14 +7,9 @@ describe('Busca por produtos na DB', () => {
   describe('Ao buscar por todos os produtos', async () => {
     before(async () => {
       const products = [
-        {
-          "id": 1,
-          "name": "Martelo de Thor",
-        },
-        {
-          "id": 2,
-          "name": "Traje de encolhimento",
-        },
+        { id: 1, name: "Martelo de Thor" },
+        { id: 2, name: "Traje de encolhimento" },
+        { id: 3, name: "Escudo do Capitão América" },
       ];
       sinon.stub(connection, 'execute').resolves(products);
     });
@@ -26,7 +21,7 @@ describe('Busca por produtos na DB', () => {
       const response = await productsModel.getAll();
 
       expect(response).to.be.a('array');
-      expect(response).to.have.length(2);
+      expect(response).to.have.length(3);
     });
   });
   describe('Ao buscar por um produto', async () => {
@@ -48,8 +43,7 @@ describe('Busca por produtos na DB', () => {
       const response = await productsModel.getOne(productId);
 
       expect(response).to.be.a('object');
-      expect(response).to.have.a.property('id');
-      expect(response).to.have.a.property('name');
+      expect(response).to.have.all.keys('id', 'name');
     });
   });
 });
