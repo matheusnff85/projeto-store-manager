@@ -41,4 +41,19 @@ describe('Testa a camada de product models', () => {
       expect(response).to.have.all.keys('id', 'name');
     });
   });
+  describe('Ao cadastrar um novo produto na DB', async () => {
+    before(async () => {
+      const product = [{ id: 4, name: "Bandana do Naruto" }];
+      sinon.stub(connection, 'execute').resolves(product);
+    });
+    after(async () => {
+      connection.execute.restore();
+    });
+    it('Retorna um objeto com id e nome do produto cadastrado', async () => {
+      const response = await productsModel.createProduct('Bandana do Naruto');
+
+      expect(response).to.be.a('object');
+      expect(response).to.have.all.keys('id', 'name');
+    });
+  });
 });
