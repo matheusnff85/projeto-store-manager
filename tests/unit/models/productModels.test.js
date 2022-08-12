@@ -11,7 +11,7 @@ describe('Testa a camada de product models', () => {
         { id: 2, name: "Traje de encolhimento" },
         { id: 3, name: "Escudo do Capitão América" },
       ];
-      sinon.stub(connection, 'execute').resolves(products);
+      sinon.stub(connection, 'execute').resolves([products]);
     });
     after(async () => {
       connection.execute.restore();
@@ -27,7 +27,7 @@ describe('Testa a camada de product models', () => {
   describe('Ao buscar por um produto', async () => {
     before(async () => {
       const product = [{id: 3, name: "Escudo do Capitão América" }];
-      sinon.stub(connection, 'execute').resolves(product);
+      sinon.stub(connection, 'execute').resolves([product]);
     });
     after(async () => {
       connection.execute.restore();
