@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const connection = require('../../../models/connection');
 const productsModel = require('../../../models/productModel');
 
-describe('Busca por produtos na DB', () => {
+describe('Testa a camada de product models', () => {
   describe('Ao buscar por todos os produtos', async () => {
     before(async () => {
       const products = [
@@ -26,12 +26,7 @@ describe('Busca por produtos na DB', () => {
   });
   describe('Ao buscar por um produto', async () => {
     before(async () => {
-      const product = [
-        {
-          "id": 3,
-          "name": "Escudo do Capitão América",
-        }
-      ];
+      const product = [{id: 3, name: "Escudo do Capitão América" }];
       sinon.stub(connection, 'execute').resolves(product);
     });
     after(async () => {
