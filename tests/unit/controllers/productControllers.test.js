@@ -12,7 +12,7 @@ const products = [
 
 const product = [{ id: 3, name: "Escudo do Capitão América" }];
 
-describe('Testa a camada de product controllers', () => {
+describe('Testa o arquivo de products da camada de controllers', () => {
   describe('A busca por todos os produtos foi um sucesso', async () => {
     const response = {};
     const request = {};

@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const connection = require('../../../models/connection');
 const productsModel = require('../../../models/productModel');
 
-describe('Testa a camada de product models', () => {
+describe('Testa o arquivo de products da camada de models', () => {
   describe('Ao buscar por todos os produtos', async () => {
     before(async () => {
       const products = [

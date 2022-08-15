@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const productsModel = require('../../../models/productModel');
 const productsService = require('../../../services/productService');
 
-describe('Testa a camada de product services', () => {
+describe('Testa o arquivo de products da camada de services', () => {
   describe('Busca por todos os produtos em caso de sucesso', () => {
     const products = [
       { id: 1, name: "Martelo de Thor" },
