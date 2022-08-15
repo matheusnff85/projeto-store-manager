@@ -2,7 +2,6 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 const productsController = require('../../../controllers/productController');
 const productsService = require('../../../services/productService');
-const { response } = require('express');
 
 const products = [
   { id: 1, name: "Martelo de Thor" },

@@ -3,7 +3,9 @@ const validations = require('./validations');
 const productsModel = require('../models/productModel');
 
 const validateProducts = async (saleArray) => {
-  const productIsOnDB = await Promise.all(saleArray.map((sale) => productsModel.getOne(sale.productId)));
+  const productIsOnDB = await Promise.all(saleArray.map((sale) => (
+    productsModel.getOne(sale.productId)
+  )));
   if (productIsOnDB.includes(false)) return { code: 404, message: 'Product not found' };
   return true;
 };
