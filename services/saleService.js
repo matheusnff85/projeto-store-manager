@@ -6,7 +6,7 @@ const validateProducts = async (saleArray) => {
   const productIsOnDB = await Promise.all(saleArray.map((sale) => (
     productsModel.getOne(sale.productId)
   )));
-  if (productIsOnDB.includes(false)) return { code: 404, message: 'Product not found' };
+  if (productIsOnDB.includes(undefined)) return { code: 404, message: 'Product not found' };
   return true;
 };
 
@@ -17,7 +17,9 @@ const createNewSale = async (saleArray) => {
   if (salesIsValid !== true) return salesIsValid;
   
   const saleId = await salesModel.createSaleId();
-  await Promise.all(saleArray.map((sale) => salesModel.createNewSale(saleId, sale)));
+  Promise.all(saleArray.map(async (sale) => {
+    await salesModel.createNewSale(saleId, sale);
+  }));
   return { data: { id: saleId, itemsSold: saleArray }, code: 201 };
 };
 
