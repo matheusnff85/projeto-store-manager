@@ -51,7 +51,89 @@ describe('Testa o arquivo de sales da camada de models', () => {
       expect(result).to.be.equal(true);
     });
   });
-  describe('Testa a função verifySaleId', async () => { });
-  describe('Testa a função getAll', async () => { });
-  describe('Testa a função getOne', async () => { });
+  describe('Testa a função verifySaleId', async () => {
+    before(async () => {
+      sinon.stub(connection, 'execute').resolves([{id: 2, date: '2022-08-16 18:49:57' }]);
+    });
+    after(async () => {
+      connection.execute.restore();
+    });
+    it('a função retorna um booleano', async () => {
+      const result = await salesModel.verifySaleId(2);
+
+      expect(result).to.be.a('boolean');
+      expect(result).to.be.equal(true);
+    });
+  });
+
+  describe('Testa a função getAll', async () => {
+    const getAllReturn = [
+      {
+        saleId: 1,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 1,
+        quantity: 5
+      },
+      {
+        saleId: 2,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 3,
+        quantity: 15
+      },
+      {
+        saleId: 3,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 1,
+        quantity: 1
+      },
+      {
+        saleId: 3,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 2,
+        quantity: 5
+      }
+    ]
+    before(async () => {
+      sinon.stub(connection, 'execute').resolves([getAllReturn]);
+    });
+    after(async () => {
+      connection.execute.restore();
+    });
+
+    it('a função retorna um array com todas as vendas', async () => {
+      const result = await salesModel.getAll();
+      
+      expect(result).to.be.a('array');
+      expect(result).to.have.length(4);
+    });
+  });
+  
+  describe('Testa a função getOne', async () => {
+    const getOneResult = [
+      {
+        saleId: 3,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 1,
+        quantity: 1
+      },
+      {
+        saleId: 3,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 2,
+        quantity: 5
+      }
+    ];
+    before(async () => {
+      sinon.stub(connection, 'execute').resolves([getOneResult]);
+    });
+    after(async () => {
+      connection.execute.restore();
+    });
+    it('a função retorna um array com as vendas encontradas', async () => {
+      const result = await salesModel.getOne(3);
+
+      expect(result).to.be.a('array');
+      expect(result).to.have.length(2);
+    });
+  });
 });
