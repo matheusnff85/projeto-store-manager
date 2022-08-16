@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const productsModel = require('../models/productModel');
 
 const nameSchema = Joi.string().min(5).required().messages({
   'string.min': '422|"name" length must be at least 5 characters long',
@@ -17,7 +18,7 @@ const validateName = (string) => {
 
 const saleSchema = Joi.object({
   productId: Joi.number().required().messages({
-    'any.required': '400|"product" is required',
+    'any.required': '400|"productId" is required',
   }),
   quantity: Joi.number().integer().min(1).required()
     .messages({
@@ -27,18 +28,40 @@ const saleSchema = Joi.object({
   }),
 });
 
-const validateSale = (saleArray) => {
-  const validateResult = saleArray.map((sale) => {
-    const result = saleSchema.validate(sale);
-    if ('error' in result) {
-      const [code, message] = result.error.details[0].message.split('|');
-      return { code, message };
-    } return true;
-  });
-  return validateResult.find((validate) => typeof validate === 'object') || true;
+const validateSale = (saleObj) => {
+  const result = saleSchema.validate(saleObj);
+  if ('error' in result) {
+    const [code, message] = result.error.details[0].message.split('|');
+    return { code, message };
+  } 
+  return true;
+  // return validateResult.find((validate) => typeof validate === 'object') || true;
 };
+
+const validateProductId = async (productId) => {
+  const product = await productsModel.getOne(productId);
+  if (!product || product === undefined) {
+    return { code: 404, message: 'Product not found' };
+  }
+  return true;
+};
+
+const validateAll = async (saleArray) => Promise.all(
+  saleArray.map(async (sale) => {
+    const validateOne = validateSale(sale);
+    if (validateOne !== true)return validateOne;
+    const validateTwo = await validateProductId(sale.productId);
+    if (validateTwo !== true) return validateTwo;
+  }),
+).then((data) => data.find((item) => item));
+
+// const saleArrayIsValid = validateSale(saleArray);
+// if (saleArrayIsValid !== true) return saleArrayIsValid;
+// const validateResult = await validateProductId(productId);
+// if (validateResult !== true) return validateResult;
 
 module.exports = {
   validateName,
   validateSale,
+  validateAll,
 };

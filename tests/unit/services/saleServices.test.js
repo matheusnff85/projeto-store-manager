@@ -40,7 +40,7 @@ describe('Testa o arquivo de sales da camada de services', () => {
     });
   });
   describe('O payload informado contém um ou mais produtos inválidos', async () => {
-    const invalidProductId = [{ productId: 1, quantity: 1 }, { productId: 9532, quantity: 5 }];
+    const invalidProductId = [{ productId: 1, quantity: 1 }, { productId: 99999, quantity: 5 }];
     before(() => {
       sinon.stub(productsModel, 'getOne').resolves(undefined);
     });

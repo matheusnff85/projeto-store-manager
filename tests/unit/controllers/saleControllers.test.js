@@ -40,7 +40,7 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
     const failReturn = { message: 'Product not found', code: 404 }
 
     before(() => {
-      request.body = [{ productId: 5, quantity: 1 }, { productId: 2, quantity: 5 }];
+      request.body = [{ productId: 90, quantity: 1 }, { productId: 2, quantity: 5 }];
       response.status = sinon.stub()
         .returns(response);
       response.json = sinon.stub()
