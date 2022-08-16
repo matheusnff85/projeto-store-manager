@@ -51,4 +51,7 @@ describe('Testa o arquivo de sales da camada de models', () => {
       expect(result).to.be.equal(true);
     });
   });
+  describe('Testa a função verifySaleId', async () => { });
+  describe('Testa a função getAll', async () => { });
+  describe('Testa a função getOne', async () => { });
 });
