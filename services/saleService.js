@@ -6,9 +6,9 @@ const createNewSale = async (saleArray) => {
   if (validateResult !== undefined) return validateResult;
 
   const saleId = await salesModel.createSaleId();
-  await Promise.all(saleArray.map((sale) => {
-    salesModel.createNewSale(saleId, sale);
-  }));
+  await Promise.all(saleArray.map((sale) => (
+    salesModel.createNewSale(saleId, sale)
+  )));
   return { data: { id: saleId, itemsSold: saleArray }, code: 201 };
 };
 

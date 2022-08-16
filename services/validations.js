@@ -35,7 +35,6 @@ const validateSale = (saleObj) => {
     return { code, message };
   } 
   return true;
-  // return validateResult.find((validate) => typeof validate === 'object') || true;
 };
 
 const validateProductId = async (productId) => {
@@ -49,16 +48,11 @@ const validateProductId = async (productId) => {
 const validateAll = async (saleArray) => Promise.all(
   saleArray.map(async (sale) => {
     const validateOne = validateSale(sale);
-    if (validateOne !== true)return validateOne;
+    if (validateOne !== true) return validateOne;
     const validateTwo = await validateProductId(sale.productId);
     if (validateTwo !== true) return validateTwo;
   }),
 ).then((data) => data.find((item) => item));
-
-// const saleArrayIsValid = validateSale(saleArray);
-// if (saleArrayIsValid !== true) return saleArrayIsValid;
-// const validateResult = await validateProductId(productId);
-// if (validateResult !== true) return validateResult;
 
 module.exports = {
   validateName,
