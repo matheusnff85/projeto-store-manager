@@ -188,4 +188,52 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
       expect(response.json.calledWith({ message: failReturn.message })).to.be.equal(true);
     });
   });
+  describe('Em caso de falha ao deletar uma venda', async () => {
+    const response = {};
+    const request = {};
+    const serviceReturn = { message: 'Sale not found', code: 404 };
+
+    before(() => {
+      request.params = { id: 9987 };
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
+      sinon.stub(salesService, 'deleteSale')
+        .resolves(serviceReturn);
+    });
+    after(() => {
+      salesService.deleteSale.restore();
+    });
+    it('os metodos "status" e "json" são chamados corretamente', async () => {
+      await salesController.deleteSale(request, response);
+
+      expect(response.status.calledWith(404)).to.be.equal(true);
+      expect(response.json.calledWith({ message: serviceReturn.message })).to.be.equal(true);
+    });
+  });
+  describe('Em caso de sucesso ao deletar uma venda', async () => {
+    const response = {};
+    const request = {};
+    const saleId = 2;
+    const serviceReturn = { code: 204 };
+
+    before(() => {
+      request.params = { id: saleId };
+      response.status = sinon.stub()
+        .returns(response);
+      response.send = sinon.stub()
+        .returns();
+      sinon.stub(salesService, 'deleteSale')
+        .resolves(serviceReturn);
+    });
+    after(() => {
+      salesService.deleteSale.restore();
+    });
+    it('O controller retorna apenas o codigo http', async () => {
+      await salesController.deleteSale(request, response);
+
+      expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
+    });
+  });
 });

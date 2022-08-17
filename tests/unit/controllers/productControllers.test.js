@@ -219,7 +219,7 @@ describe('Testa o arquivo de products da camada de controllers', () => {
     const serviceReturn = { message: 'Product not found', code: 404 };
 
     before(() => {
-      request.params = { id: product.id };
+      request.params = { id: 987 };
       response.status = sinon.stub()
         .returns(response);
       response.json = sinon.stub()
