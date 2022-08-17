@@ -123,4 +123,39 @@ describe('Testa o arquivo de products da camada de services', () => {
       expect(response.data.name).to.be.equal(productName);
     });
   });
+  describe('A função que atualiza um produto em caso de sucesso', async () => {
+    const product = { id: 3, name: 'Bandana do Naruto' };
+    before(() => {
+      sinon.stub(productsModel, 'updateProduct').resolves(product);
+    });
+    after(() => {
+      productsModel.updateProduct.restore();
+    });
+    it('é retornado um objeto com as chaves "code" e "data"', async () => {
+      const result = await productsService.updateProduct(product.id, product.name);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'data');
+    });
+    it('as informações do objeto estão corretas', async () => {
+      const result = await productsService.updateProduct(product.id, product.name);
+
+      expect(result.code).to.be.equal(200);
+      expect(result.data).to.be.equal(product);
+    });
+  });
+  describe('A função que atualiza um produto em caso de falha', async () => {
+    before(() => {
+
+    });
+    after(() => {
+
+    });
+    it('retorna um objeto com as chaves "code", "message"', async () => {
+
+    });
+    it('o objeto contém as informações corretas', async () => {
+
+    });
+  });
 });
