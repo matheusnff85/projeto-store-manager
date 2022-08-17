@@ -26,8 +26,17 @@ const getOne = async (id) => {
   return { data: result, code: 200 };
 };
 
+const deleteSale = async (id) => {
+  const validateId = await validations.validateSaleId(id);
+  if (validateId !== true) return validateId;
+
+  await salesModel.deleteSale(id);
+  return { code: 204 };
+};
+
 module.exports = {
   createNewSale,
   getAll,
   getOne,
+  deleteSale,
 };

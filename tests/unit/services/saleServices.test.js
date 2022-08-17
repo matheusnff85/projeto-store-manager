@@ -197,4 +197,43 @@ describe('Testa o arquivo de sales da camada de services', () => {
       });
     });
   });
+
+  describe('Ao deletar uma em caso de sucesso', async () => {
+    before(() => {
+      sinon.stub(salesModel, 'verifySaleId').resolves(true);
+      sinon.stub(salesModel, 'deleteSale').resolves(true);
+    });
+    after(() => {
+      salesModel.verifySaleId.restore();
+      salesModel.deleteSale.restore();
+    });
+    it('Retorna um objeto com a chave "code" contendo o codigo de sucesso', async () => {
+      const result = await salesService.deleteSale(3);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.a.key('code');
+      expect(result.code).to.be.equal(204);
+    });
+  });
+
+  describe('Ao deletar uma venda em caso de falha', async () => {
+    before(() => {
+      sinon.stub(salesModel, 'verifySaleId').resolves(false);
+    });
+    after(() => {
+      salesModel.verifySaleId.restore();
+    });
+    it('Retorna um objeto com as chaves "code" e "message"', async () => {
+      const result = await salesService.deleteSale(987);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'message');
+    });
+    it('Os dados de "code" e "message" estão corretos', async () => {
+      const result = await salesService.deleteSale(987);
+
+      expect(result.code).to.be.equal(404);
+      expect(result.message).to.be.equal('Sale not found');
+    });
+  });
 });
