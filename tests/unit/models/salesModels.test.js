@@ -92,7 +92,7 @@ describe('Testa o arquivo de sales da camada de models', () => {
         productId: 2,
         quantity: 5
       }
-    ]
+    ];
     before(async () => {
       sinon.stub(connection, 'execute').resolves([getAllReturn]);
     });
@@ -111,13 +111,11 @@ describe('Testa o arquivo de sales da camada de models', () => {
   describe('Testa a função getOne', async () => {
     const getOneResult = [
       {
-        saleId: 3,
         date: '2022-08-16T18:49:57.000Z',
         productId: 1,
         quantity: 1
       },
       {
-        saleId: 3,
         date: '2022-08-16T18:49:57.000Z',
         productId: 2,
         quantity: 5

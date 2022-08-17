@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const productsModel = require('../models/productModel');
+const salesModel = require('../models/saleModel');
 
 const nameSchema = Joi.string().min(5).required().messages({
   'string.min': '422|"name" length must be at least 5 characters long',
@@ -45,6 +46,12 @@ const validateProductId = async (productId) => {
   return true;
 };
 
+const validateSaleId = async (id) => {
+  const sale = await salesModel.verifySaleId(id);
+  if (sale !== true) return { code: 404, message: 'Sale not found' };
+  return true;
+};
+
 const validateAll = async (saleArray) => Promise.all(
   saleArray.map(async (sale) => {
     const validateOne = validateSale(sale);
@@ -58,4 +65,5 @@ module.exports = {
   validateName,
   validateSale,
   validateAll,
+  validateSaleId,
 };

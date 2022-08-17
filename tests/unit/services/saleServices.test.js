@@ -6,11 +6,6 @@ const productsModel = require('../../../models/productModel');
 
 const products = [{ productId: 1, quantity: 1 },{ productId: 2, quantity: 5 }];
 
-const modelResult = {
-  id: 3,
-  itemsSold: products,
-}
-
 describe('Testa o arquivo de sales da camada de services', () => {
   describe('O payload inserido contém os dados corretos', async () => {
     before(() => {
@@ -24,7 +19,7 @@ describe('Testa o arquivo de sales da camada de services', () => {
       productsModel.getOne.restore();
     });
 
-    it('retorna um objeto com as chaves "code" e "data" para serem usadas no controller', async () => {
+    it('retorna um objeto com as chaves "code" e "data"', async () => {
       const result = await salesService.createNewSale(products);
 
       expect(result).to.be.a('object');
@@ -80,6 +75,126 @@ describe('Testa o arquivo de sales da camada de services', () => {
       expect(result).to.have.all.keys('code', 'message');
       expect(result.code).to.be.equal('422');
       expect(result.message).to.be.equal('"quantity" must be greater than or equal to 1');
+    });
+  });
+  describe('Testa o retorno da função para listar todas as vendas', async () => {
+    const getAllReturn = [
+      {
+        saleId: 1,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 1,
+        quantity: 5
+      },
+      {
+        saleId: 2,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 3,
+        quantity: 15
+      },
+      {
+        saleId: 3,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 1,
+        quantity: 1
+      },
+      {
+        saleId: 3,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 2,
+        quantity: 5
+      }
+    ];
+    before(() => {
+      sinon.stub(salesModel, 'getAll').resolves(getAllReturn);
+    });
+    after(() => {
+      salesModel.getAll.restore();
+    });
+
+    it('A função retorna um objeto com as chaves "code" e "data" ', async () => {
+      const result = await salesService.getAll();
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'data');
+    });
+    it('Os dados das chaves "code" e "data" estão corretos', async () => {
+      const result = await salesService.getAll();
+
+      expect(result.code).to.be.equal(200);
+      expect(result.data).to.be.equal(getAllReturn);
+    });
+  });
+  describe('A função que busca todas as vendas não retorna nada', async () => {
+    before(() => {
+      sinon.stub(salesModel, 'getAll').resolves(null);
+    });
+    after(() => {
+      salesModel.getAll.restore();
+    });
+    it('Retorna um objeto com as chaves "code" e "message" com suas informações', async () => {
+      const result = await salesService.getAll();
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'message');
+      expect(result.code).to.be.equal(404);
+      expect(result.message).to.be.equal('Sale not found');
+    });
+  });
+  describe('Testa o retorno da função de buscar vendas pelo Id', async () => {
+    describe('O payload informado possui os dados corretos', async () => {
+      const getOneResult = [
+        {
+          date: '2022-08-16T18:49:57.000Z',
+          productId: 1,
+          quantity: 1
+        },
+        {
+          date: '2022-08-16T18:49:57.000Z',
+          productId: 2,
+          quantity: 5
+        }
+      ];
+      before(() => {
+        sinon.stub(salesModel, 'getOne').resolves(getOneResult);
+        sinon.stub(salesModel, 'verifySaleId').resolves(true);
+      });
+      after(() => {
+        salesModel.getOne.restore();
+        salesModel.verifySaleId.restore();
+      });
+      it('Retorna um objeto com as chaves "code" e "data"', async () => {
+        const result = await salesService.getOne(3);
+
+        expect(result).to.be.a('object');
+        expect(result).to.have.all.keys('code', 'data');
+      });
+      it('O objeto retornado possui os dados corretos', async () => {
+        const result = await salesService.getOne(3);
+
+        expect(result.code).to.be.equal(200);
+        expect(result.data).to.be.equal(getOneResult);
+      });
+    });
+
+    describe('O payload informado possui os dados incorretos', async () => {
+      before(() => {
+        sinon.stub(salesModel, 'verifySaleId').resolves(false);
+      });
+      after(() => {
+        salesModel.verifySaleId.restore();
+      });
+      it('retorna um objeto com as chaves "code" e "message"', async () => {
+        const result = await salesService.getOne(9846);
+
+        expect(result).to.be.a('object');
+        expect(result).to.have.all.keys('code', 'message');
+      });
+      it('O objeto retornado possui os dados corretos', async () => {
+        const result = await salesService.getOne(9846);
+
+        expect(result.code).to.be.equal(404);
+        expect(result.message).to.be.equal('Sale not found');
+      });
     });
   });
 });

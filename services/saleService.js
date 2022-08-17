@@ -12,6 +12,22 @@ const createNewSale = async (saleArray) => {
   return { data: { id: saleId, itemsSold: saleArray }, code: 201 };
 };
 
+const getAll = async () => {
+  const result = await salesModel.getAll();
+  if (!result || result.length === 0) return { code: 404, message: 'Sale not found' };
+  return { data: result, code: 200 };
+};
+
+const getOne = async (id) => {
+  const validateId = await validations.validateSaleId(id);
+  if (validateId !== true) return validateId;
+
+  const result = await salesModel.getOne(id);
+  return { data: result, code: 200 };
+};
+
 module.exports = {
   createNewSale,
+  getAll,
+  getOne,
 };

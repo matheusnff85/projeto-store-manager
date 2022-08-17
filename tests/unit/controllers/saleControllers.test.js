@@ -57,4 +57,135 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
       expect(response.json.calledWith({ message: failReturn.message })).to.be.equal(true);
     });
   });
+  describe('A busca por todas as vendas foi um sucesso', async () => {
+    const getAllReturn = [
+      {
+        saleId: 1,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 1,
+        quantity: 5
+      },
+      {
+        saleId: 2,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 3,
+        quantity: 15
+      },
+      {
+        saleId: 3,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 1,
+        quantity: 1
+      },
+      {
+        saleId: 3,
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 2,
+        quantity: 5
+      }
+    ];
+    const response = {};
+    const request = {};
+    const serviceReturn = { code: 200, data: getAllReturn };
+
+    before(() => {
+      response.status = sinon.stub()
+        .returns(response);
+      response.send = sinon.stub()
+        .returns();
+      sinon.stub(salesService, 'getAll').resolves(serviceReturn)
+    });
+    after(() => {
+      salesService.getAll.restore();
+    });
+    it('os metodos "status" e "send" são chamados corretamente', async () => {
+      await salesController.getAll(request, response);
+
+      expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
+      expect(response.send.calledWith(serviceReturn.data)).to.be.equal(true);
+    });
+  });
+
+  describe('A busca por todas as vendas falhou', async () => {
+    const response = {};
+    const request = {};
+    const failReturn = { message: 'Sale not found', code: 404 }
+
+    before(() => {
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
+      sinon.stub(salesService, 'getAll').resolves(failReturn)
+    });
+    after(() => {
+      salesService.getAll.restore();
+    });
+    it('os metodos "status" e "json" são chamados corretamente', async () => {
+      await salesController.getAll(request, response);
+
+      expect(response.status.calledWith(failReturn.code)).to.be.equal(true);
+      expect(response.json.calledWith({ message: failReturn.message })).to.be.equal(true);
+    });
+  });
+
+  describe('A busca por Id da venda foi um sucesso', async () => {
+    const getOneReturn = [
+      {
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 1,
+        quantity: 1
+      },
+      {
+        date: '2022-08-16T18:49:57.000Z',
+        productId: 2,
+        quantity: 5
+      }
+    ];
+    const response = {};
+    const request = {};
+    const serviceReturn = { code: 200, data: getOneReturn };
+
+    before(() => {
+      request.params = { id: 3 };
+      response.status = sinon.stub()
+        .returns(response);
+      response.send = sinon.stub()
+        .returns();
+      sinon.stub(salesService, 'getOne').resolves(serviceReturn)
+    });
+    after(() => {
+      salesService.getOne.restore();
+    });
+
+    it('Os metodos "staus" e "send" são chamados corretamente', async () => {
+      await salesController.getOne(request, response);
+
+      expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
+      expect(response.send.calledWith(serviceReturn.data)).to.be.equal(true);
+    });
+  });
+  describe('A busca por Id da venda falhou', async () => {
+    const response = {};
+    const request = {};
+    const failReturn = { message: 'Sale not found', code: 404 }
+
+    before(() => {
+      request.params = { id: 987 };
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
+      sinon.stub(salesService, 'getOne').resolves(failReturn)
+    });
+    after(() => {
+      salesService.getOne.restore();
+    });
+    it('Os metodos "status" e "json" são chamados corretamente', async () => {
+      await salesController.getOne(request, response);
+
+      expect(response.status.calledWith(failReturn.code)).to.be.equal(true);
+      expect(response.json.calledWith({ message: failReturn.message })).to.be.equal(true);
+    });
+  });
 });

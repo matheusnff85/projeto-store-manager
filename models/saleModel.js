@@ -22,7 +22,7 @@ const verifySaleId = async (id) => {
 };
 
 const getAll = async () => {
-  const query = `SELECT spdt.sale_id, sale.date, spdt.product_id, spdt.quantity
+  const query = `SELECT spdt.sale_id AS saleId, sale.date, spdt.product_id AS productId, spdt.quantity
   FROM StoreManager.sales_products AS spdt
   INNER JOIN StoreManager.sales AS sale
   WHERE spdt.sale_id = sale.id
@@ -33,7 +33,7 @@ const getAll = async () => {
 };
 
 const getOne = async (id) => {
-  const query = `SELECT spdt.sale_id, sale.date, spdt.product_id, spdt.quantity
+  const query = `SELECT sale.date, spdt.product_id AS productId, spdt.quantity
   FROM StoreManager.sales_products AS spdt
   INNER JOIN StoreManager.sales AS sale
   WHERE spdt.sale_id = sale.id AND sale.id = ?
