@@ -188,4 +188,43 @@ describe('Testa o arquivo de products da camada de services', () => {
       expect(result.message).to.be.equal('"name" is required');
     });
   });
+
+  describe('Ao deletar um produto em caso de sucesso', async () => {
+    before(() => {
+      sinon.stub(productsModel, 'getOne').resolves(true);
+      sinon.stub(productsModel, 'deleteProduct').resolves(true);
+    });
+    after(() => {
+      productsModel.deleteProduct.restore();
+      productsModel.getOne.restore();
+    });
+    it('Retorna um objeto com a chave "code" contendo o codigo de sucesso', async () => {
+      const result = await productsService.deleteProduct(3);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.a.key('code');
+      expect(result.code).to.be.equal(204);
+    });
+  });
+
+  describe('Ao deletar um produto em caso de falha', async () => {
+    before(() => {
+      sinon.stub(productsModel, 'getOne').resolves(null);
+    });
+    after(() => {
+      productsModel.getOne.restore();
+    });
+    it('Retorna um objeto com as chaves "code" e "message"', async () => {
+      const result = await productsService.deleteProduct(987);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'message');
+    });
+    it('Os dados de "code" e "message" estão corretos', async () => {
+      const result = await productsService.deleteProduct(987);
+
+      expect(result.code).to.be.equal(404);
+      expect(result.message).to.be.equal('Product not found');
+    });
+  });
 });

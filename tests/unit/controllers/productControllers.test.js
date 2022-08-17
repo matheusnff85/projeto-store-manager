@@ -213,4 +213,52 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.send.calledWith(serviceReturn.data)).to.be.equal(true);
     });
   });
+  describe('Em caso de falha ao deletar um produto', async () => {
+    const response = {};
+    const request = {};
+    const serviceReturn = { message: 'Product not found', code: 404 };
+
+    before(() => {
+      request.params = { id: product.id };
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
+      sinon.stub(productsService, 'deleteProduct')
+        .resolves(serviceReturn);
+    });
+    after(() => {
+      productsService.deleteProduct.restore();
+    });
+    it('os metodos "status" e "json" são chamados corretamente', async () => {
+      await productsController.deleteProduct(request, response);
+
+      expect(response.status.calledWith(404)).to.be.equal(true);
+      expect(response.json.calledWith({ message: serviceReturn.message })).to.be.equal(true);
+    });
+  });
+  describe('Em caso de sucesso ao deletar um produto', async () => {
+    const response = {};
+    const request = {};
+    const productId = 3;
+    const serviceReturn = { code: 204 };
+
+    before(() => {
+      request.params = { id: productId };
+      response.status = sinon.stub()
+        .returns(response);
+      response.send = sinon.stub()
+        .returns();
+      sinon.stub(productsService, 'deleteProduct')
+        .resolves(serviceReturn);
+    });
+    after(() => {
+      productsService.deleteProduct.restore();
+    });
+    it('O controller retorna apenas o codigo http', async () => {
+      await productsController.deleteProduct(request, response);
+
+      expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
+    });
+  });
 });
