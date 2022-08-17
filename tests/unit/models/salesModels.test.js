@@ -147,4 +147,20 @@ describe('Testa o arquivo de sales da camada de models', () => {
       expect(result).to.be.equal(true);
     });
   });
+  describe('Ao atualizar uma venda', async () => {
+    const saleId = 1;
+    const productId = 2;
+    const quantity = 20;
+    before(async () => {
+      sinon.stub(connection, 'execute').resolves(true);
+    });
+    after(async () => {
+      connection.execute.restore();
+    });
+    it('retorna true ao executar a query de atualização', async () => {
+      const result = await salesModel.updateSale(saleId, productId, quantity);
+
+      expect(result).to.be.equal(true);
+    });
+  });
 });

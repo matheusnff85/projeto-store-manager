@@ -28,7 +28,6 @@ const getOne = async (id) => {
 
 const deleteSale = async (id) => {
   const validateId = await validations.validateSaleId(id);
-  console.log(validateId);
   if (validateId !== true) return validateId;
 
   await salesModel.deleteSale(id);
