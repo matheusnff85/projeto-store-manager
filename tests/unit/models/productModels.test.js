@@ -24,7 +24,7 @@ describe('Testa o arquivo de products da camada de models', () => {
       expect(response).to.have.length(3);
     });
   });
-  describe('Ao buscar por um produto', async () => {
+  describe('Ao buscar por um produto pelo Id', async () => {
     before(async () => {
       const product = [{id: 3, name: "Escudo do Capitão América" }];
       sinon.stub(connection, 'execute').resolves([product]);
@@ -82,6 +82,21 @@ describe('Testa o arquivo de products da camada de models', () => {
       const result = await productsModel.deleteProduct(3);
 
       expect(result).to.be.equal(true);
+    });
+  });
+  describe('Ao buscar por produtos na DB pelo nome', async () => {
+    const products = [{ id: 1, name: "Martelo de Thor" }, { id: 2, name: "Martelo de Ferro" }];
+    before(async () => {
+      sinon.stub(connection, 'execute').resolves([products]);
+    });
+    after(async () => {
+      connection.execute.restore();
+    });
+    it('retorna um array com todos os items que possuirem o nome buscado', async () => {
+      const result = await productsModel.getByName('Martelo');
+
+      expect(result).to.be.a('array');
+      expect(result).to.be.equal(products);
     });
   });
 });
