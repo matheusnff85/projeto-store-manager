@@ -71,4 +71,17 @@ describe('Testa o arquivo de products da camada de models', () => {
       expect(result).to.have.all.keys('id', 'name');
     });
   });
+  describe('Ao deletar um produto da DB', async () => {
+    before(async () => {
+      sinon.stub(connection, 'execute').resolves(true);
+    });
+    after(async () => {
+      connection.execute.restore();
+    });
+    it('retorna true ao executar a query para deletar', async () => {
+      const result = await productsModel.deleteProduct(3);
+
+      expect(result).to.be.equal(true);
+    });
+  });
 });
