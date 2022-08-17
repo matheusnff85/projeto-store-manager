@@ -227,4 +227,47 @@ describe('Testa o arquivo de products da camada de services', () => {
       expect(result.message).to.be.equal('Product not found');
     });
   });
+
+  describe('Ao buscar um produto pelo nome em caso de sucesso', async () => {
+    const product = [{ id: 1, name: "Martelo de Thor" }];
+    before(() => {
+      sinon.stub(productsModel, 'getByName').resolves(product);
+    });
+    after(() => {
+      productsModel.getByName.restore();
+    });
+    it('retorna um objeto com as chaves "code" e "data"', async () => {
+      const result = await productsService.getByName('Martelo');
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'data');
+    });
+    it('as chaves "code" e "data" retornam os valores corretos', async () => {
+      const result = await productsService.getByName('Martelo');
+
+      expect(result.code).to.be.equal(200);
+      expect(result.data).to.be.equal(product);
+    });
+  });
+
+  describe('Ao buscar por um produto em caso de falha', async () => {
+    before(() => {
+      sinon.stub(productsModel, 'getByName').resolves(null);
+    });
+    after(() => {
+      productsModel.getByName.restore();
+    });
+    it('retorna um objeto com as chaves "code", "message"', async () => {
+      const result = await productsService.getByName('megatronmax235468713a');
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'message');
+    });
+    it('as chaves "code" e "message" retornam os valores corretos', async () => {
+      const result = await productsService.getByName('megatronmax235468713a');
+
+      expect(result.code).to.be.equal(404);
+      expect(result.message).to.be.equal('Product not found');
+    });
+  });
 });

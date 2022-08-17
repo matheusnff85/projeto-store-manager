@@ -350,4 +350,5 @@ describe('Testa o arquivo de sales da camada de services', () => {
       expect(result.message).to.be.equal('Sale not found');
     });
   });
+
 });

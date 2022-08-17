@@ -42,10 +42,18 @@ const deleteProduct = async (id) => {
   return { code: 204 };
 };
 
+const getByName = async (productName) => {
+  const result = await productsModel.getByName(productName);
+
+  if (!result || result.length === 0) return { code: 404, message: 'Product not found' };
+  return { code: 200, data: result };
+};
+
 module.exports = {
   getAll,
   getOne,
   createProduct,
   updateProduct,
   deleteProduct,
+  getByName,
 };
