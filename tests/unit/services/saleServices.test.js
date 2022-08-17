@@ -7,7 +7,7 @@ const productsModel = require('../../../models/productModel');
 const products = [{ productId: 1, quantity: 1 },{ productId: 2, quantity: 5 }];
 
 describe('Testa o arquivo de sales da camada de services', () => {
-  describe('O payload inserido contém os dados corretos', async () => {
+  describe('O payload inserido contém os dados corretos para criar uma venda', async () => {
     before(() => {
       sinon.stub(salesModel, 'createSaleId').resolves(3);
       sinon.stub(salesModel, 'createNewSale').resolves(true);
@@ -34,6 +34,7 @@ describe('Testa o arquivo de sales da camada de services', () => {
       expect(result.data.itemsSold).to.be.equal(products);
     });
   });
+  
   describe('O payload informado contém um ou mais produtos inválidos', async () => {
     const invalidProductId = [{ productId: 1, quantity: 1 }, { productId: 99999, quantity: 5 }];
     before(() => {
@@ -51,7 +52,8 @@ describe('Testa o arquivo de sales da camada de services', () => {
       expect(result.code).to.be.equal(404);
       expect(result.message).to.be.equal('Product not found');
     });
-  })
+  });
+
   describe('O payload informado contém um erro na quantidade', async () => {
     const noQuantity = [{ productId: 2, quantity: 1 }, { productId: 2 }];
     const invalidQuantity = [{ productId: 1, quantity: 1 }, { productId: 3, quantity: 0 }];
@@ -77,6 +79,7 @@ describe('Testa o arquivo de sales da camada de services', () => {
       expect(result.message).to.be.equal('"quantity" must be greater than or equal to 1');
     });
   });
+
   describe('Testa o retorno da função para listar todas as vendas', async () => {
     const getAllReturn = [
       {
@@ -124,6 +127,7 @@ describe('Testa o arquivo de sales da camada de services', () => {
       expect(result.data).to.be.equal(getAllReturn);
     });
   });
+
   describe('A função que busca todas as vendas não retorna nada', async () => {
     before(() => {
       sinon.stub(salesModel, 'getAll').resolves(null);
@@ -140,6 +144,7 @@ describe('Testa o arquivo de sales da camada de services', () => {
       expect(result.message).to.be.equal('Sale not found');
     });
   });
+
   describe('Testa o retorno da função de buscar vendas pelo Id', async () => {
     describe('O payload informado possui os dados corretos', async () => {
       const getOneResult = [
@@ -232,6 +237,115 @@ describe('Testa o arquivo de sales da camada de services', () => {
     it('Os dados de "code" e "message" estão corretos', async () => {
       const result = await salesService.deleteSale(987);
 
+      expect(result.code).to.be.equal(404);
+      expect(result.message).to.be.equal('Sale not found');
+    });
+  });
+
+  describe('Ao atualizar o payload informado está correto', async () => {
+    const updateReturn = {
+      saleId: 1,
+      itemsUpdated: [
+        {
+          productId: 1,
+          quantity: 55,
+        },
+        {
+          productId: 2,
+          quantity: 50,
+        },
+      ]
+    };
+    before(() => {
+      sinon.stub(salesModel, 'updateSale').resolves(true);
+      sinon.stub(salesModel, 'verifySaleId').resolves(true);
+      sinon.stub(productsModel, 'getOne').resolves(true);
+    });
+    after(() => {
+      salesModel.updateSale.restore();
+      salesModel.verifySaleId.restore();
+      productsModel.getOne.restore();
+    });
+
+    it('retorna um objeto com as chaves "code" e "data"', async () => {
+      const result = await salesService.updateSale(updateReturn.saleId, updateReturn.itemsUpdated);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('data', 'code');
+    });
+    it('o objeto retornado contém o "code" e "data" corretos', async () => {
+      const result = await salesService.updateSale(updateReturn.saleId, updateReturn.itemsUpdated);
+
+      expect(result.code).to.be.equal(200);
+      expect(result.data).to.have.all.keys('id', 'itemsUpdated');
+      expect(result.data.id).to.be.equal(1);
+      expect(result.data.itemsUpdated).to.be.equal(updateReturn.itemsUpdated);
+    });
+  });
+
+  describe('Ao atualizar o payload contém um produto invalido', async () => {
+    const invalidProductId = [{ productId: 1, quantity: 1 }, { productId: 99999, quantity: 5 }];
+    before(() => {
+      sinon.stub(productsModel, 'getOne').resolves(undefined);
+    });
+    after(() => {
+      productsModel.getOne.restore();
+    });
+
+    it('retorna um objeto com o codigo de erro e a mensagem', async () => {
+      const result = await salesService.updateSale(1, invalidProductId);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'message');
+      expect(result.code).to.be.equal(404);
+      expect(result.message).to.be.equal('Product not found');
+    });
+  });
+
+  describe('Ao atualizar o payload contém uma quantidade invalida', async () => {
+    const noQuantity = [{ productId: 2, quantity: 1 }, { productId: 2 }];
+    const invalidQuantity = [{ productId: 1, quantity: 1 }, { productId: 3, quantity: 0 }];
+
+    before(() => {
+      sinon.stub(productsModel, 'getOne').resolves(true);
+    });
+    after(() => {
+      productsModel.getOne.restore();
+    });
+
+    it('Uma ou mais quantidades não foram informadas', async () => {
+      const result = await salesService.updateSale(1, noQuantity);
+
+      expect(result).to.have.all.keys('code', 'message');
+      expect(result.code).to.be.equal('400');
+      expect(result.message).to.be.equal('"quantity" is required');
+    });
+
+    it('uma ou mais das quantidades informadas é menor ou igual a zero', async () => {
+      const result = await salesService.updateSale(1, invalidQuantity);
+
+      expect(result).to.have.all.keys('code', 'message');
+      expect(result.code).to.be.equal('422');
+      expect(result.message).to.be.equal('"quantity" must be greater than or equal to 1');
+    });
+  });
+
+  describe('Ao atualizar o payload contém um produto invalido', async () => {
+    const updateItems = [{ productId: 1, quantity: 1 }, { productId: 2, quantity: 5 }];
+    before(() => {
+      sinon.stub(productsModel, 'getOne').resolves(true);
+      sinon.stub(salesModel, 'verifySaleId').resolves(false);
+    });
+    after(() => {
+      productsModel.getOne.restore();
+      salesModel.verifySaleId.restore();
+    });
+
+    it('retorna um objeto com o codigo de erro e a mensagem', async () => {
+      const result = await salesService.updateSale(9876, updateItems);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'message');
       expect(result.code).to.be.equal(404);
       expect(result.message).to.be.equal('Sale not found');
     });

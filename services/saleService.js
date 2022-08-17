@@ -34,9 +34,21 @@ const deleteSale = async (id) => {
   return { code: 204 };
 };
 
+const updateSale = async (id, updatesArray) => {
+  const validateItems = await validations.validateAll(updatesArray);
+  if (validateItems !== undefined) return validateItems;
+  const validateSale = await validations.validateSaleId(id);
+  if (validateSale !== true) return validateSale;
+
+  await Promise.all(updatesArray.map((sale) =>
+    salesModel.updateSale(id, sale.productId, sale.quantity)));
+  return { data: { id, itemsUpdated: updatesArray }, code: 200 };
+};
+
 module.exports = {
   createNewSale,
   getAll,
   getOne,
   deleteSale,
+  updateSale,
 };
