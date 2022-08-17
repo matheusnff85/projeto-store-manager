@@ -66,4 +66,5 @@ module.exports = {
   validateSale,
   validateAll,
   validateSaleId,
+  validateProductId,
 };

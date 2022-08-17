@@ -126,10 +126,12 @@ describe('Testa o arquivo de products da camada de services', () => {
   describe('A função que atualiza um produto em caso de sucesso', async () => {
     const product = { id: 3, name: 'Bandana do Naruto' };
     before(() => {
+      sinon.stub(productsModel, 'getOne').resolves(true);
       sinon.stub(productsModel, 'updateProduct').resolves(product);
     });
     after(() => {
       productsModel.updateProduct.restore();
+      productsModel.getOne.restore();
     });
     it('é retornado um objeto com as chaves "code" e "data"', async () => {
       const result = await productsService.updateProduct(product.id, product.name);
@@ -144,18 +146,46 @@ describe('Testa o arquivo de products da camada de services', () => {
       expect(result.data).to.be.equal(product);
     });
   });
-  describe('A função que atualiza um produto em caso de falha', async () => {
+  describe('Ao tentar atualizar o id do produto é invalido', async () => {
+    const product = { id: 987, name: 'Bandana do Naruto' };
     before(() => {
-
+      sinon.stub(productsModel, 'getOne').resolves(null);
     });
     after(() => {
-
+      productsModel.getOne.restore();
     });
     it('retorna um objeto com as chaves "code", "message"', async () => {
+      const result = await productsService.updateProduct(product.id, product.name);
 
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'message');
     });
     it('o objeto contém as informações corretas', async () => {
+      const result = await productsService.updateProduct(product.id, product.name);
 
+      expect(result.code).to.be.equal(404);
+      expect(result.message).to.be.equal('Product not found');
+    });
+  });
+  describe('Ao tentar atualizar o nome do produto é invalido', async () => {
+    const product = { id: 3 };
+    before(() => {
+      sinon.stub(productsModel, 'getOne').resolves(true);
+    });
+    after(() => {
+      productsModel.getOne.restore();
+    });
+    it('retorna um objeto com as chaves "code", "message"', async () => {
+      const result = await productsService.updateProduct(product.id, product.name);
+
+      expect(result).to.be.a('object');
+      expect(result).to.have.all.keys('code', 'message');
+    });
+    it('o objeto contém as informações corretas', async () => {
+      const result = await productsService.updateProduct(product.id, product.name);
+
+      expect(result.code).to.be.equal('400');
+      expect(result.message).to.be.equal('"name" is required');
     });
   });
 });
