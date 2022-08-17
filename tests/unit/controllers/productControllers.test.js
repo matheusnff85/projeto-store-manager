@@ -158,4 +158,59 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
     });
   });
+
+  describe('Em caso de falha ao atualizar um produto', async () => {
+    const response = {};
+    const request = {};
+    const product = { id: 987, name: "Bandana do Naruto" };
+    const serviceReturn = { message: 'Product not found', code: 404 };
+
+    before(() => {
+      request.params = { id: product.id };
+      request.body = { newName: product.name };
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
+      sinon.stub(productsService, 'updateProduct')
+        .resolves(serviceReturn);
+    });
+    after(() => {
+      productsService.updateProduct.restore();
+    });
+    it('os metodos "status" e "json" são chamados corretamente', async () => {
+      await productsController.updateProduct(request, response);
+
+      expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
+      expect(response.json.calledWith({ message: serviceReturn.message })).to.be.equal(true);
+    });
+  });
+
+  describe('Em caso de sucesso ao atualizar um produto', async () => {
+    const response = {};
+    const request = {};
+    const product = { id: 3, name: "Bandana do Naruto" };
+    const serviceReturn = { data: product, code: 200 };
+
+    before(() => {
+      request.params = { id: product.id };
+      request.body = { productName: product.name };
+      response.status = sinon.stub()
+        .returns(response);
+      response.send = sinon.stub()
+        .returns();
+      sinon.stub(productsService, 'updateProduct')
+        .resolves(serviceReturn);
+    });
+    after(() => {
+      productsService.updateProduct.restore();
+    });
+
+    it('os metodos "status" e "send" são chamados corretamente', async () => {
+      await productsController.updateProduct(request, response);
+
+      expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
+      expect(response.send.calledWith(serviceReturn.data)).to.be.equal(true);
+    });
+  });
 });
