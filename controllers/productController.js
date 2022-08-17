@@ -45,10 +45,20 @@ const deleteProduct = async (req, res) => {
   return res.status(result.code).send();
 };
 
+const getByName = async (req, res) => {
+  const { q } = req.query;
+  const result = await productsService.getByName(q);
+  if ('message' in result) {
+    return res.status(result.code).json({ message: result.message });
+  }
+  return res.status(result.code).send(result.data);
+};
+
 module.exports = {
   getAll,
   getOne,
   createProduct,
   updateProduct,
   deleteProduct,
+  getByName,
 };
