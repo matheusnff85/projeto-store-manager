@@ -134,4 +134,17 @@ describe('Testa o arquivo de sales da camada de models', () => {
       expect(result).to.have.length(2);
     });
   });
+  describe('Ao deletar uma venda da DB', async () => {
+    before(async () => {
+      sinon.stub(connection, 'execute').resolves(true);
+    });
+    after(async () => {
+      connection.execute.restore();
+    });
+    it('retorna true ao executar a query para deletar', async () => {
+      const result = await salesModel.deleteSale(2);
+
+      expect(result).to.be.equal(true);
+    });
+  });
 });
