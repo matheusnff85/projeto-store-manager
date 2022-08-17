@@ -35,6 +35,7 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
     });
   });
+
   describe('Ao buscar por todos os produtos falhou', async () => {
     const response = {};
     const request = {};
@@ -59,6 +60,7 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
     });
   });
+
   describe('A busca por apenas um produto foi um sucesso', async () => {
     const response = {};
     const request = {};
@@ -83,6 +85,7 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
     });
   });
+
   describe('Ao buscar por apenas um produto falhou', async () => {
     const response = {};
     const request = {};
@@ -108,6 +111,7 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
     });
   });
+
   describe('Em caso de falha ao tentar cadastrar um novo produto', async () => {
     const response = {};
     const request = {};
@@ -133,6 +137,7 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
     });
   });
+
   describe('Em caso de sucesso ao cadastar um novo produto', async () => {
     const response = {};
     const request = {};
@@ -213,6 +218,7 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.send.calledWith(serviceReturn.data)).to.be.equal(true);
     });
   });
+  
   describe('Em caso de falha ao deletar um produto', async () => {
     const response = {};
     const request = {};
@@ -237,6 +243,7 @@ describe('Testa o arquivo de products da camada de controllers', () => {
       expect(response.json.calledWith({ message: serviceReturn.message })).to.be.equal(true);
     });
   });
+
   describe('Em caso de sucesso ao deletar um produto', async () => {
     const response = {};
     const request = {};

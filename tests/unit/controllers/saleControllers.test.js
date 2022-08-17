@@ -34,6 +34,7 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
       expect(response.send.calledWith(sucessReturn.data)).to.be.equal(true);
     });
   });
+
   describe('Em caso de falha ao criar uma nova venda', async () => {
     const response = {};
     const request = {};
@@ -57,6 +58,7 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
       expect(response.json.calledWith({ message: failReturn.message })).to.be.equal(true);
     });
   });
+
   describe('A busca por todas as vendas foi um sucesso', async () => {
     const getAllReturn = [
       {
@@ -165,6 +167,7 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
       expect(response.send.calledWith(serviceReturn.data)).to.be.equal(true);
     });
   });
+
   describe('A busca por Id da venda falhou', async () => {
     const response = {};
     const request = {};
@@ -188,6 +191,7 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
       expect(response.json.calledWith({ message: failReturn.message })).to.be.equal(true);
     });
   });
+
   describe('Em caso de falha ao deletar uma venda', async () => {
     const response = {};
     const request = {};
@@ -212,6 +216,7 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
       expect(response.json.calledWith({ message: serviceReturn.message })).to.be.equal(true);
     });
   });
+
   describe('Em caso de sucesso ao deletar uma venda', async () => {
     const response = {};
     const request = {};
@@ -234,6 +239,69 @@ describe('Testa o arquivo de sales para a camada de controllers', () => {
       await salesController.deleteSale(request, response);
 
       expect(response.status.calledWith(serviceReturn.code)).to.be.equal(true);
+    });
+  });
+
+  describe('Em caso de sucesso ao editar uma venda', async () => {
+    const serviceReturn = {
+      saleId: 1,
+      itemsUpdated: [
+        {
+          productId: 1,
+          quantity: 10
+        },
+        {
+          productId: 2,
+          quantity: 50
+        },
+      ]
+    };
+    const response = {};
+    const request = {};
+    const sucessReturn = { code: 200, data: serviceReturn };
+
+    before(() => {
+      request.body = serviceReturn.itemsUpdated;
+      request.params = { id: serviceReturn.saleId  };
+      response.status = sinon.stub()
+        .returns(response);
+      response.send = sinon.stub()
+        .returns();
+      sinon.stub(salesService, 'updateSale').resolves(sucessReturn)
+    });
+    after(() => {
+      salesService.updateSale.restore();
+    });
+    it('os metodos de resposta são chamados corretamente', async () => {
+      await salesController.updateSale(request, response);
+      
+      expect(response.status.calledWith(sucessReturn.code)).to.be.equal(true);
+      expect(response.send.calledWith(sucessReturn.data)).to.be.equal(true);
+    });
+  });
+
+  describe('Em caso de falha ao editar uma venda', async () => {
+    const response = {};
+    const request = {};
+    const failReturn = { message: 'Sale not found', code: 404 }
+
+    before(() => {
+      request.body = [{ productId: 1, quantity: 18 }, { productId: 2, quantity: 5 }];
+      request.params = { id: 9879 };
+      response.status = sinon.stub()
+        .returns(response);
+      response.json = sinon.stub()
+        .returns();
+      sinon.stub(salesService, 'updateSale').resolves(failReturn)
+    });
+    after(() => {
+      salesService.updateSale.restore();
+    });
+    it('os metodos de resposta são chamados corretamente', async () => {
+      await salesController.updateSale(request, response);
+
+      expect(response.status.calledWith(failReturn.code)).to.be.equal(true);
+      expect(response.json.calledWith({ message: failReturn.message })).to.be.equal(true);
     });
   });
 });

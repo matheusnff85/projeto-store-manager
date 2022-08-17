@@ -42,7 +42,7 @@ const updateSale = async (id, updatesArray) => {
 
   await Promise.all(updatesArray.map((sale) =>
     salesModel.updateSale(id, sale.productId, sale.quantity)));
-  return { data: { id, itemsUpdated: updatesArray }, code: 200 };
+  return { data: { saleId: id, itemsUpdated: updatesArray }, code: 200 };
 };
 
 module.exports = {

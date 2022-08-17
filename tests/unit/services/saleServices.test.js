@@ -277,8 +277,8 @@ describe('Testa o arquivo de sales da camada de services', () => {
       const result = await salesService.updateSale(updateReturn.saleId, updateReturn.itemsUpdated);
 
       expect(result.code).to.be.equal(200);
-      expect(result.data).to.have.all.keys('id', 'itemsUpdated');
-      expect(result.data.id).to.be.equal(1);
+      expect(result.data).to.have.all.keys('saleId', 'itemsUpdated');
+      expect(result.data.saleId).to.be.equal(1);
       expect(result.data.itemsUpdated).to.be.equal(updateReturn.itemsUpdated);
     });
   });
