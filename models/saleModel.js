@@ -22,11 +22,11 @@ const verifySaleId = async (id) => {
 };
 
 const getAll = async () => {
-  const query = `SELECT spdt.sale_id AS saleId, sale.date, spdt.product_id AS productId, spdt.quantity
-  FROM StoreManager.sales_products AS spdt
+  const query = `SELECT spd.sale_id AS saleId, sale.date, spd.product_id AS productId, spd.quantity
+  FROM StoreManager.sales_products AS spd
   INNER JOIN StoreManager.sales AS sale
-  WHERE spdt.sale_id = sale.id
-  ORDER BY sale.id ASC, spdt.product_id ASC;`;
+  WHERE spd.sale_id = sale.id
+  ORDER BY sale.id ASC, spd.product_id ASC;`;
 
   const [result] = await connection.execute(query);
   return result;
