@@ -46,23 +46,23 @@ Para a rota de vendas:
 
 Segue abaixo algumas imagens dos retornos de algumas das requisições que podem ser feitas na aplicação.
 
-##### Buscar por todas as vendas.
-- ![getSales](images/storeSales.png)
+#### Buscar por todas as vendas.
+![getSales](images/storeSales.png)
 
-##### Buscar por Id do produto.
-- ![getById](images/storeById.png)
+#### Buscar por Id do produto.
+![getById](images/storeById.png)
 
-##### Buscar por nome do produto.
-- ![getByQuery](images/storeQuery.png)
+#### Buscar por nome do produto.
+![getByQuery](images/storeQuery.png)
 
-##### Criar uma nova venda.
-- ![createSale](images/storeCreateSale.png)
+#### Criar uma nova venda.
+![createSale](images/storeCreateSale.png)
 
-##### Atualizar um produto.
-- ![updateSale](images/storeUpdate.png)
+#### Atualizar um produto.
+![updateSale](images/storeUpdate.png)
 
-##### Deletar uma venda.
-- ![deleteSale](images/storeDelete.png)
+#### Deletar uma venda.
+![deleteSale](images/storeDelete.png)
 
-##### Quando um produto ou venda não é encontrado(a) no banco de dados:
-- ![notFound](images/StoreNotFound.png)
+#### Quando um produto ou venda não é encontrado(a) no banco de dados:
+![notFound](images/StoreNotFound.png)
