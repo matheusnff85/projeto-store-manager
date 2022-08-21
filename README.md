@@ -47,7 +47,7 @@ Para a rota de vendas:
 - Segue abaixo algumas imagens dos retornos de algumas das requisições que podem ser feitas na aplicação.
 
 ### Buscar por todas as vendas.
-- [getSales](images/storeSales.png)
+- ![getSales](images/storeSales.png)
 - [getById](images/storeById.png)
 - [getByQuery](images/storeQuery.png)
 - [createSale](images/storeCreateSale.png)
