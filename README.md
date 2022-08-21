@@ -1,10 +1,10 @@
 # 🚧 Projeto Store Manager 🚧
 
 Neste repositório contém o codigo desenvolvido no projeto Store Manager durante o curso da [Trybe](https://www.betrybe.com/) no módulo de Back-end feito pelo aluno [Matheus Marinho](https://www.linkedin.com/in/matheus-marinhodsp/).
----
+
 ## Objetivo do Projeto
 O projeto consiste em uma aplicação Back-end feita em Node.js utlizando a arquitetura MSC, para gerenciar um banco de dados simples, o banco de dados possui as tabelas de: products, sales, e sale_products, a aplicação recebe requisições HTTP e manipula o banco de dados conforme as mesmas, sejam elas GET, POST, PUT ou DELETE, o projeto foi feito em um container docker, utilizando o arquivo **docker-compose.yml** localizado na raiz do projeto, esse arquivo docker tambem gera um container para o banco de dados.
----
+
 
 ## Tecnologias Utilizadas
 
